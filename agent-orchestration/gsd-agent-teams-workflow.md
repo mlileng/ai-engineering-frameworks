@@ -86,7 +86,7 @@ At the end of GSD's `plan-phase`, generate a scoped `AGENTS.md` for each functio
 
 ### AGENTS.md vs. CLAUDE.md
 
-Both serve the same purpose—persistent agent context—but AGENTS.md is cross-platform while CLAUDE.md is Claude Code specific with guaranteed native support. Practical recommendation: maintain both at the root level. For nested teammate-scoped files, AGENTS.md is sufficient and avoids duplicating CLAUDE.md per directory.
+Both serve the same purpose—persistent agent context—but AGENTS.md is cross-platform while CLAUDE.md is Claude Code specific with guaranteed native support. Practical recommendation: maintain both at the root level. Add a reference in CLAUDE.md pointing to AGENTS.md (e.g., "See AGENTS.md for cross-platform agent context and team structure")—this ensures Claude Code always picks up the cross-platform context regardless of how its native AGENTS.md support evolves. For nested teammate-scoped files, AGENTS.md is sufficient and avoids duplicating CLAUDE.md per directory.
 
 ---
 
