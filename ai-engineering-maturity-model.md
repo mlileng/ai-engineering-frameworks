@@ -112,3 +112,5 @@ Most engineering teams find their sustainable sweet spot at Levels 3–4. Levels
 - Does BMAD's role-based handoff pattern (Scrum Master to Developer) add value or redundant ceremony when layered on Agent Teams?
 - Can Ralph Loop's retry logic be applied at the individual teammate level, or only at the team lead level?
 - What's the right granularity for team structure artifacts—role descriptions only, or full file ownership maps?
+- What triggers the decision to use Agent Teams vs. GSD's native subagent execution for a given phase?
+- How does STATE.md handle mid-phase interruptions when Agent Teams are running—partial teammate completions?
