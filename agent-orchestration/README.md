@@ -4,4 +4,4 @@ Strategies for coordinating multiple AI agents, managing context, and scaling wo
 
 ## Resources
 
-- **[GSD + Agent Teams Workflow](./gsd-agent-teams-workflow.md)** — How GSD's planning layer connects to Agent Teams' execution layer, including the bridge artifact and command sequence
+- **[GSD + Agent Teams Workflow](./gsd-agent-teams-workflow.md)** — Full-lifecycle workflow connecting GSD planning to Agent Teams execution for coding and non-coding roles, with AGENTS.md as the bridge and the human role at each stage

@@ -1,6 +1,6 @@
-# GSD + Agent Teams: Planning-to-Execution Workflow
+# GSD + Agent Teams: Full-Lifecycle Workflow
 
-GSD and Agent Teams operate at different layers. GSD handles everything before and after execution—requirements, planning, state, summaries. Agent Teams handles how work gets distributed and coordinated during execution. This doc covers how the two layers connect in practice.
+GSD and Agent Teams operate at different layers. GSD handles requirements, planning, state, and summaries. Agent Teams handles how work gets distributed and coordinated—whether that work is coding, writing specs, reviewing architecture, or maintaining documentation. This doc covers how the two layers connect in practice.
 
 For background on why these are complementary rather than competing, see the [Bridging Levels 5 and 6](../claude-code/7-levels-of-claude-code.md#bridging-levels-5-and-6-from-planning-to-parallel-execution) section in the 7 Levels guide and [Level 5: Coordinated Execution](../ai-engineering-maturity-model.md#level-5-coordinated-execution) in the maturity model.
 
@@ -37,7 +37,7 @@ Shared task list with dependency tracking. Teammates self-claim tasks as they fi
 
 ## The Bridge: AGENTS.md
 
-The gap between GSD's planning output and Agent Teams' spawn input is a context bridge—something that translates plans into per-teammate instructions. The cleanest solution is `AGENTS.md`, an open cross-platform format for guiding coding agents. It's plain Markdown, has no required schema, and is supported by 25+ tools including Claude Code, Cursor, Copilot, Gemini CLI, and Devin. It's stewarded by the Agentic AI Foundation under the Linux Foundation.
+The gap between GSD's planning output and Agent Teams' spawn input is a context bridge—something that translates plans into per-teammate instructions. The cleanest solution is `AGENTS.md`, an open cross-platform format for guiding AI agents. It's plain Markdown, has no required schema, and is supported by 25+ tools including Claude Code, Cursor, Copilot, Gemini CLI, and Devin. It's stewarded by the Agentic AI Foundation under the Linux Foundation.
 
 The key capability is **nested file support**: place an AGENTS.md inside any subdirectory, and the closest one to the file being edited takes precedence. This means teammates self-configure from the filesystem instead of needing manually crafted spawn prompts.
 
@@ -47,17 +47,21 @@ A root-level `AGENTS.md` carries stable project-wide context that every teammate
 
 ### Nested AGENTS.md — Teammate Scope
 
-At the end of GSD's `plan-phase`, generate a scoped `AGENTS.md` for each functional area a teammate will own. The teammate, assigned to that directory, picks up its context automatically.
+At the end of GSD's `plan-phase`, generate a scoped `AGENTS.md` for each functional area a teammate will own—whether that's a source module, a specs directory, a docs folder, or a test suite. The teammate, assigned to that directory, picks up its context automatically.
 
 ```
 /project
   AGENTS.md                  ← project-wide (from PROJECT.md + REQUIREMENTS.md)
+  /specs
+    AGENTS.md                ← requirements agent context
+  /docs/architecture
+    AGENTS.md                ← architecture reviewer context
   /src/auth
-    AGENTS.md                ← auth teammate context (generated from plan-phase)
+    AGENTS.md                ← auth coding teammate context
   /src/api
-    AGENTS.md                ← API teammate context (generated from plan-phase)
-  /src/frontend
-    AGENTS.md                ← frontend teammate context (generated from plan-phase)
+    AGENTS.md                ← API coding teammate context
+  /tests
+    AGENTS.md                ← quality agent context
 ```
 
 ### What Goes in Each File
@@ -106,6 +110,19 @@ The full layer model:
 | Per-teammate context | Nested `AGENTS.md` (from `plan-phase`) | Scoped instructions per file domain |
 | Execution | Claude Agent Teams | Parallel work, inter-agent communication |
 | State and continuity | GSD (`STATE.md`, `SUMMARY.md`) | Persistence across sessions |
+
+---
+
+## The Human Role
+
+Throughout this workflow, agents handle completeness—making sure nothing falls through the cracks, keeping artifacts consistent, executing against plans. The human handles judgment:
+
+- **During `discuss-phase`:** The agent asks questions; you decide which questions matter and when the spec is done
+- **During `plan-phase`:** The agent proposes task breakdowns and team structure; you decide whether the plan is good enough to commit tokens to
+- **During `execute-phase`:** Agents work in parallel; you monitor, redirect stuck teammates, resolve conflicts between competing approaches, and decide when output quality is sufficient
+- **During `verify-work`:** The agent checks acceptance criteria; you decide whether "passing" actually means "done" for this audience and this moment
+
+The risk at every stage is passivity—assuming the agents are on track because they look busy. Staying engaged means making the judgment calls that agents can't: prioritization, stakeholder dynamics, risk appetite, and knowing when "good enough" is the right call.
 
 ---
 

@@ -52,7 +52,7 @@ Instead of you thinking and Claude executing, use the **GSD Framework** to have 
 
 GSD and Agent Teams are complementary layers, not competing systems. GSD handles requirements, planning, and state persistence. Agent Teams handle parallel execution with inter-agent communication. But there's a gap between them—neither produces a team structure definition that maps tasks to teammates and assigns file ownership.
 
-The cleanest bridge is `AGENTS.md`—an open cross-platform format supported by 25+ tools. Place a root `AGENTS.md` with project-wide context, then generate nested `AGENTS.md` files per module at the end of `plan-phase`. Teammates assigned to a directory pick up their scoped context automatically—no manual spawn prompt crafting required. See the [GSD + Agent Teams Workflow](../agent-orchestration/gsd-agent-teams-workflow.md) for the full pattern.
+The cleanest bridge is `AGENTS.md`—an open cross-platform format supported by 25+ tools. Place a root `AGENTS.md` with project-wide context, then generate nested `AGENTS.md` files per functional area at the end of `plan-phase`. Teammates assigned to a directory pick up their scoped context automatically—no manual spawn prompt crafting required. This works for coding agents scoped to source modules and for non-coding agents scoped to specs, docs, or test directories. See the [GSD + Agent Teams Workflow](../agent-orchestration/gsd-agent-teams-workflow.md) for the full pattern.
 
 | Concern | GSD | Agent Teams |
 |---|---|---|
@@ -86,9 +86,11 @@ Key practices that separate productive teams from expensive chaos:
 - **Write rich spawn prompts.** Teammates start with blank context. Include the project background, relevant files, conventions, and a specific goal. A vague spawn prompt produces vague work.
 - **Plan first, execute second.** Run a plan-mode phase before committing tokens to parallel execution. Plan mode is cheap and read-only—use it as the pre-execution gate.
 - **Design for inter-agent communication.** Explicitly call out in the spec where teammates need to share findings, not just run in parallel.
-- **Stay engaged.** This is supervised workflow, not fire-and-forget. You make the strategic calls on when to redirect or shut down a stuck teammate.
+- **Stay engaged.** This is supervised workflow, not fire-and-forget. Agents handle completeness; you handle judgment—prioritization, quality bar, stakeholder calls, and knowing when to redirect or shut down a stuck teammate.
 - **Use split panes (tmux) for more than 2 teammates.** Lets you spot problems as they happen instead of discovering wasted work after the fact.
 - **Agent mode is fixed at spawn.** Plan mode teammates cannot switch to execution mode. Spawn a new teammate in default mode for handoffs.
+
+Agent teams don't have to be all coders. The same patterns apply to non-coding roles—requirements agents, architecture reviewers, documentation agents, quality agents—each scoped via nested `AGENTS.md` files to their functional area. See [Beyond Code: Full-Lifecycle Agent Teams](../ai-engineering-maturity-model.md#beyond-code-full-lifecycle-agent-teams) in the maturity model for the full breakdown.
 
 Create agents in `.claude/agents/` with a `.md` file describing their role and tools.
 
