@@ -4,6 +4,7 @@ A collection of learnings, frameworks, and best practices for building with AI a
 
 ## Contents
 
+- **[AI Engineering Maturity Model](./ai-engineering-maturity-model.md)** — Tool-agnostic framework for assessing AI-assisted engineering practice maturity
 - **[Claude Code](./claude-code/)** — Patterns and strategies for Claude Code workflows
 - **[Prompt Engineering](./prompt-engineering/)** — Techniques for effective prompting
 - **[Agent Orchestration](./agent-orchestration/)** — Multi-agent systems and coordination

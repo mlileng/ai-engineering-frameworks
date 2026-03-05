@@ -48,11 +48,49 @@ Instead of you thinking and Claude executing, use the **GSD Framework** to have 
 
 ---
 
+## **Bridging Levels 5 and 6: From Planning to Parallel Execution**
+
+GSD and Agent Teams are complementary layers, not competing systems. GSD handles requirements, planning, and state persistence. Agent Teams handle parallel execution with inter-agent communication. But there's a gap between them—neither produces a team structure definition that maps tasks to teammates and assigns file ownership.
+
+The missing bridge artifact is something like a `TEAM_STRUCTURE.md`—produced at the end of `plan-phase`, consumed at the start of `execute-phase` as Agent Teams spawn prompts. Without it, you're planning in detail but then manually translating that plan into teammate assignments every time.
+
+| Concern | GSD | Agent Teams |
+|---|---|---|
+| Requirements elicitation | Yes | No |
+| Planning and spec artifacts | Yes | No |
+| Parallel execution with inter-agent communication | No | Yes |
+| State persistence across sessions | Yes | No |
+| File ownership and role definition | No | Needs it, but doesn't produce it |
+
+---
+
 ## **Level 6: Run Teams of Agents**
 
-Instead of one Claude doing everything, split work among **sub-agents** (specialized personas). Each agent gets fresh, isolated context, so they work faster and cheaper. Run them sequentially (one finishes, next starts) for specialization, or run them in parallel (multiple terminal tabs) for speed.
+Instead of one Claude doing everything, split work among specialized agents. There are two distinct approaches, and choosing the right one matters.
 
-Create agents in `.claude/agents/` with a `.md` file describing their role and tools. You can run up to 5+ Claude instances in parallel. Use `--dangerously-skip-permissions` to stop asking for approval on every action.
+### Subagents vs. Agent Teams
+
+**Subagents** are focused, independent workers that report back to the lead session. They get a task, do it, return a result. No communication between them. Use subagents when tasks are truly independent—running tests, searching code, generating documentation in parallel.
+
+**Agent Teams** are a different model entirely. Teammates can communicate directly with each other through an inbox-based messaging system, not just report back to the lead. This matters when agents need to share findings, coordinate on interfaces, or avoid stepping on each other's work. Agent Teams is an experimental feature, enabled by adding `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS` to `settings.json`.
+
+**Rule of thumb:** If teammates don't need to talk to each other, use subagents. If they do, use Agent Teams.
+
+### Agent Teams — What Works
+
+The practical sweet spot is **3–5 teammates** with 5–6 tasks each. Token cost scales linearly—each teammate is a separate Claude instance, so expect 3–4x the cost of a single session.
+
+Key practices that separate productive teams from expensive chaos:
+
+- **Define file ownership in the spec.** Collisions between teammates waste tokens and produce merge conflicts. If two teammates touch the same file, you've already lost.
+- **Write rich spawn prompts.** Teammates start with blank context. Include the project background, relevant files, conventions, and a specific goal. A vague spawn prompt produces vague work.
+- **Plan first, execute second.** Run a plan-mode phase before committing tokens to parallel execution. Plan mode is cheap and read-only—use it as the pre-execution gate.
+- **Design for inter-agent communication.** Explicitly call out in the spec where teammates need to share findings, not just run in parallel.
+- **Stay engaged.** This is supervised workflow, not fire-and-forget. You make the strategic calls on when to redirect or shut down a stuck teammate.
+- **Use split panes (tmux) for more than 2 teammates.** Lets you spot problems as they happen instead of discovering wasted work after the fact.
+- **Agent mode is fixed at spawn.** Plan mode teammates cannot switch to execution mode. Spawn a new teammate in default mode for handoffs.
+
+Create agents in `.claude/agents/` with a `.md` file describing their role and tools.
 
 ---
 
