@@ -52,7 +52,7 @@ Instead of you thinking and Claude executing, use the **GSD Framework** to have 
 
 GSD and Agent Teams are complementary layers, not competing systems. GSD handles requirements, planning, and state persistence. Agent Teams handle parallel execution with inter-agent communication. But there's a gap between them—neither produces a team structure definition that maps tasks to teammates and assigns file ownership.
 
-The missing bridge artifact is something like a `TEAM_STRUCTURE.md`—produced at the end of `plan-phase`, consumed at the start of `execute-phase` as Agent Teams spawn prompts. Without it, you're planning in detail but then manually translating that plan into teammate assignments every time.
+The cleanest bridge is `AGENTS.md`—an open cross-platform format supported by 25+ tools. Place a root `AGENTS.md` with project-wide context, then generate nested `AGENTS.md` files per module at the end of `plan-phase`. Teammates assigned to a directory pick up their scoped context automatically—no manual spawn prompt crafting required. See the [GSD + Agent Teams Workflow](../agent-orchestration/gsd-agent-teams-workflow.md) for the full pattern.
 
 | Concern | GSD | Agent Teams |
 |---|---|---|

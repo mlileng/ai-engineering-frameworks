@@ -71,7 +71,7 @@ Multiple AI agents work on the same project with defined roles, handoffs, and ow
 
 **You're here if:** You run multi-agent workflows with explicit team structures, file ownership, and inter-agent communication patterns.
 
-**What helps at this level:** Agent Teams with rich spawn prompts, TEAM_STRUCTURE.md artifacts bridging planning and execution, split-pane monitoring (tmux), clearly defined file ownership maps.
+**What helps at this level:** Agent Teams with rich spawn prompts, `AGENTS.md` files (root for project constitution, nested per module for teammate scope) bridging planning and execution, split-pane monitoring (tmux), clearly defined file ownership maps.
 
 ### Subagents vs. Teams
 
@@ -111,6 +111,8 @@ Most engineering teams find their sustainable sweet spot at Levels 3–4. Levels
 - What are the right token cost thresholds for when Agent Teams ROI justifies the overhead vs. sequential execution?
 - Does BMAD's role-based handoff pattern (Scrum Master to Developer) add value or redundant ceremony when layered on Agent Teams?
 - Can Ralph Loop's retry logic be applied at the individual teammate level, or only at the team lead level?
-- What's the right granularity for team structure artifacts—role descriptions only, or full file ownership maps?
+- What's the right granularity for nested AGENTS.md files—one per module, per phase, or per teammate role?
+- Can GSD's `plan-phase` automatically generate nested AGENTS.md files, or does this require a custom command?
+- When a teammate modifies its scope mid-execution, should it update its own AGENTS.md or flag to the lead?
 - What triggers the decision to use Agent Teams vs. GSD's native subagent execution for a given phase?
 - How does STATE.md handle mid-phase interruptions when Agent Teams are running—partial teammate completions?

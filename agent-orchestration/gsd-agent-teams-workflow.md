@@ -35,18 +35,77 @@ Shared task list with dependency tracking. Teammates self-claim tasks as they fi
 
 ---
 
+## The Bridge: AGENTS.md
+
+The gap between GSD's planning output and Agent Teams' spawn input is a context bridge—something that translates plans into per-teammate instructions. The cleanest solution is `AGENTS.md`, an open cross-platform format for guiding coding agents. It's plain Markdown, has no required schema, and is supported by 25+ tools including Claude Code, Cursor, Copilot, Gemini CLI, and Devin. It's stewarded by the Agentic AI Foundation under the Linux Foundation.
+
+The key capability is **nested file support**: place an AGENTS.md inside any subdirectory, and the closest one to the file being edited takes precedence. This means teammates self-configure from the filesystem instead of needing manually crafted spawn prompts.
+
+### Root AGENTS.md — Project Constitution
+
+A root-level `AGENTS.md` carries stable project-wide context that every teammate receives: project overview, architecture decisions, conventions, testing commands, security constraints, commit standards. This consolidates what GSD stores across `PROJECT.md`, `CLAUDE.md`, and `REQUIREMENTS.md` into a single file every agent reads automatically. Update it between milestones, not between phases.
+
+### Nested AGENTS.md — Teammate Scope
+
+At the end of GSD's `plan-phase`, generate a scoped `AGENTS.md` for each functional area a teammate will own. The teammate, assigned to that directory, picks up its context automatically.
+
+```
+/project
+  AGENTS.md                  ← project-wide (from PROJECT.md + REQUIREMENTS.md)
+  /src/auth
+    AGENTS.md                ← auth teammate context (generated from plan-phase)
+  /src/api
+    AGENTS.md                ← API teammate context (generated from plan-phase)
+  /src/frontend
+    AGENTS.md                ← frontend teammate context (generated from plan-phase)
+```
+
+### What Goes in Each File
+
+**Root AGENTS.md:**
+- Project name, purpose, and current milestone
+- Tech stack and architecture summary
+- Coding conventions and style rules
+- Testing commands and CI expectations
+- Commit message format
+- Security constraints (files not to read/modify)
+- Pointer to `STATE.md` for current session position
+
+**Nested AGENTS.md (per teammate/module):**
+- This teammate's role and responsibility
+- File ownership—which files and directories this teammate owns
+- Files this teammate must NOT touch
+- Dependencies on other teammates (what to wait for, what to share)
+- Module-specific conventions or constraints
+- Acceptance criteria for this task set (derived from `PLAN.md`)
+- How to signal completion to the team lead
+
+### AGENTS.md vs. CLAUDE.md
+
+Both serve the same purpose—persistent agent context—but AGENTS.md is cross-platform while CLAUDE.md is Claude Code specific with guaranteed native support. Practical recommendation: maintain both at the root level. For nested teammate-scoped files, AGENTS.md is sufficient and avoids duplicating CLAUDE.md per directory.
+
+---
+
 ## The Workflow
 
 ```
 /gsd:discuss-phase N     ← requirements & decisions (GSD)
-/gsd:plan-phase N        ← atomic task plans + team structure (GSD)
-                         ← TEAM_STRUCTURE.md generated here (bridge artifact)
-/gsd:execute-phase N     ← spawn Agent Teams using team structure (Agent Teams)
+/gsd:plan-phase N        ← atomic task plans (GSD)
+                         ← generate nested AGENTS.md per module (bridge)
+/gsd:execute-phase N     ← spawn Agent Teams; teammates self-configure via AGENTS.md
 /gsd:verify-work N       ← UAT and fix plans (GSD)
 STATE.md / SUMMARY.md    ← session continuity (GSD)
 ```
 
-The bridge artifact (`TEAM_STRUCTURE.md`) is the piece neither layer currently produces on its own. It maps tasks to teammates, assigns file ownership, and gets consumed as spawn context at the start of `execute-phase`. Without it, you're manually translating plans into teammate assignments every time.
+The full layer model:
+
+| Layer | Tool | Produces |
+|---|---|---|
+| Requirements and planning | GSD (`discuss-phase`, `plan-phase`) | `REQUIREMENTS.md`, `ROADMAP.md`, `PLAN.md` |
+| Project constitution | Root `AGENTS.md` | Stable context for all agents |
+| Per-teammate context | Nested `AGENTS.md` (from `plan-phase`) | Scoped instructions per file domain |
+| Execution | Claude Agent Teams | Parallel work, inter-agent communication |
+| State and continuity | GSD (`STATE.md`, `SUMMARY.md`) | Persistence across sessions |
 
 ---
 
